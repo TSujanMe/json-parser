@@ -6,11 +6,13 @@ import { tokenizer } from "./tokenizer";
 console.log(
   parser(
     tokenizer(`{
-  "id": "647ceaf3657eade56f8224eb",
+  "id": 12,
   "index": 0,
   "anArray": [],
   "boolean": true,
-  "nullValue": null
+  "nullValue": {
+    "key": "value"
+  }
 }
 `)
   )
