@@ -3,11 +3,11 @@ import { ASTNode, Token } from "./types";
 //parser.ts
 export const parser = (tokens: Token[]): ASTNode => {
   if (!tokens.length) {
-    throw new Error("Nothing to parse. Exiting!");
+    throw new Error("No tokens to parse");
   }
   let current = 0;
 
-  function advance() {
+  function newIndex() {
     return tokens[++current];
   }
 
@@ -35,24 +35,22 @@ export const parser = (tokens: Token[]): ASTNode => {
 
   function parseObject() {
     const node: ASTNode = { type: "Object", value: {} };
-    let token = advance(); // Eat '{'
+    let token = newIndex(); 
 
     while (token.type !== "BraceClose") {
       if (token.type === "String") {
         const key = token.value;
-        token = advance(); // Eat key
+        token = newIndex();
         if (token.type !== "Colon")
           throw new Error("Expected : in key-value pair");
-        token = advance(); // Eat ':'
-        const value = parseValue(); // Recursively parse the value
+        token = newIndex(); 
+        const value = parseValue(); // Recursively parsing the value
         node.value[key] = value;
       } else {
-        throw new Error(
-          `Expected String key in object. Token type: ${token.type}`
-        );
+        throw new Error(`Invalid Token. Token type: ${token.type}`);
       }
-      token = advance(); // Eat value or ','
-      if (token.type === "Comma") token = advance(); // Eat ',' if present
+      token = newIndex();
+      if (token.type === "Comma") token = newIndex();
     }
 
     return node;
@@ -60,14 +58,14 @@ export const parser = (tokens: Token[]): ASTNode => {
 
   function parseArray() {
     const node: ASTNode = { type: "Array", value: [] };
-    let token = advance(); // Eat '{'
+    let token = newIndex(); // Eat '{'
 
     while (token.type !== "BracketClose") {
       const value = parseValue();
       node.value.push(value);
 
-      token = advance(); // Eat value or ','
-      if (token.type === "Comma") token = advance(); // Eat ',' if present
+      token = newIndex(); // Eat value or ','
+      if (token.type === "Comma") token = newIndex(); // Eat ',' if present
     }
 
     return node;
