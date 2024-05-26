@@ -1,4 +1,4 @@
-import { Token } from "./types.js";
+import { Token } from "./types";
 import { isBooleanFalse, isBooleanTrue, isNull, isNumber } from "./utils";
 
 export const tokenizer = (input: string): Token[] => {
